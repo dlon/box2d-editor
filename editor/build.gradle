@@ -57,6 +57,17 @@ task run(type: JavaExec) {
     ignoreExitValue = true
 }
 
+task dist(type: Jar) {
+    from files(sourceSets.main.output.classesDir)
+    from files(sourceSets.main.output.resourcesDir)
+    from {configurations.compile.collect {zipTree(it)}}
+
+    manifest {
+        attributes 'Main-Class': project.mainClassName,
+                'Class-Path': sourceSets.main.runtimeClasspath
+    }
+}
+
 idea {
     module {
         // Change around the output a bit
